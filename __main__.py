@@ -26,13 +26,22 @@ static_ip_attachment = aws.lightsail.StaticIpAttachment(
     static_ip_name=static_ip.id,
     instance_name=new_instance.id)
 
+# locate Hosted Zone for Site
 hosted_zone = aws.route53.get_zone(
     name=site_domain_name,
     private_zone=False)
 
+# Add Record entries to point to the newly created Lightsail Instance
 www = aws.route53.Record("www",
     zone_id=hosted_zone.zone_id,
     name=f"www.{hosted_zone.name}",
+    type="A",
+    ttl=300,
+    records=[static_ip.ip_address])
+
+base_domain = aws.route53.Record("base",
+    zone_id=hosted_zone.zone_id,
+    name=f"{hosted_zone.name}",
     type="A",
     ttl=300,
     records=[static_ip.ip_address])
