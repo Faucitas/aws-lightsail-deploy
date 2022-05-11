@@ -1,0 +1,6 @@
+name: aws-lightsail-deployment
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Deployment for Wordpress on AWS lightsail
