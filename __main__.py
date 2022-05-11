@@ -18,7 +18,9 @@ new_instance = aws.lightsail.Instance(
         "Project": "Wordpress Deploy",
     })
 
+# Attached Static IP address to new instance
 static_ip_attachment = aws.lightsail.StaticIpAttachment(
     "StaticIpAttachment",
     static_ip_name=static_ip.id,
     instance_name=new_instance.id)
+
