@@ -1,7 +1,7 @@
 import pulumi
 import pulumi_aws as aws
 
-site_domain_name="illumifi.xyz"
+site_domain_name = "illumifi.xyz"
 
 # Create a new Lightsail Key Pair
 lg_key_pair = aws.lightsail.KeyPair("lgKeyPair")
@@ -32,14 +32,16 @@ hosted_zone = aws.route53.get_zone(
     private_zone=False)
 
 # Add Record entries to point to the newly created Lightsail Instance
-www = aws.route53.Record("www",
+www = aws.route53.Record(
+    "www",
     zone_id=hosted_zone.zone_id,
     name=f"www.{hosted_zone.name}",
     type="A",
     ttl=300,
     records=[static_ip.ip_address])
 
-base_domain = aws.route53.Record("base",
+base_domain = aws.route53.Record(
+    "base",
     zone_id=hosted_zone.zone_id,
     name=f"{hosted_zone.name}",
     type="A",
