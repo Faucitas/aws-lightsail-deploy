@@ -3,22 +3,31 @@ import pulumi_aws as aws
 from config import config
 
 domain_name = config.get('domain_name')
+blueprint = "wordpress"
+key_pair_name = "wpKeyPair"
+static_ip_name = "wpStaticIp"
+instance_name = "lightsail-wordpress-deployment"
+instance_size = "nano_2_0"
+region = "us-east-1b"
+tags = {
+    "Project": "Wordpress Deploy",
+}
 
 # Create a new Lightsail Key Pair
-wp_key_pair = aws.lightsail.KeyPair("wpKeyPair")
+wp_key_pair = aws.lightsail.KeyPair(key_pair_name)
 
 # Create a static IP address
-static_ip = aws.lightsail.StaticIp("StaticIp")
+static_ip = aws.lightsail.StaticIp(static_ip_name)
 
 # Create a new WordPress Lightsail Instance
 server = aws.lightsail.Instance(
-    "lightsail-wordpress-deployment",
-    blueprint_id="wordpress",
-    availability_zone="us-east-1b",
-    bundle_id="nano_2_0",
+    instance_name,
+    blueprint_id=blueprint,
+    availability_zone=region,
+    bundle_id=instance_size,
     key_pair_name=wp_key_pair.id,
     tags={
-        "Project": "Wordpress Deploy",
+        tags
     })
 
 # Attached Static IP address to new instance
@@ -32,11 +41,11 @@ hosted_zone = aws.route53.get_zone(
     name=domain_name,
     private_zone=False)
 
-# Add DNS record entries to point to the newly created Lightsail Instance
+# Add DNS record entries to point to the Lightsail instance
 www_dns_record = aws.route53.Record(
     "www_dns_record",
     zone_id=hosted_zone.zone_id,
-    name=f"www.{hosted_zone.name}",
+    name=f"wp.{hosted_zone.name}",
     type="A",
     ttl=300,
     records=[static_ip.ip_address])
