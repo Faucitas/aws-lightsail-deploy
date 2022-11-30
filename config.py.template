@@ -1,0 +1,15 @@
+config = {
+    'domain_name': '',
+    'subdomain': '',
+    'blueprint_id': '',
+    'key_pair': '',
+    'static_ip': '',
+    'bundle_id': '',
+    'availability_zone': '',
+    'tags': {
+        'Cost Center': '',
+        'Project': '',
+    }
+}
+
+
