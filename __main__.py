@@ -39,10 +39,10 @@ dns_record = aws.route53.Record(
     ttl=300,
     records=[static_ip.ip_address])
 
-# base_dns_record = aws.route53.Record(
-#     "base_dns_record",
-#     zone_id=hosted_zone.zone_id,
-#     name=hosted_zone.name,
-#     type="A",
-#     ttl=300,
-#     records=[static_ip.ip_address])
+base_dns_record = aws.route53.Record(
+    f"{name}-base-dns-record",
+    zone_id=hosted_zone.zone_id,
+    name=hosted_zone.name,
+    type="A",
+    ttl=300,
+    records=[static_ip.ip_address])
